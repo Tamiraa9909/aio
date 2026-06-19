@@ -25,10 +25,18 @@ jobs:
           projectName: "mediafairy-aio"
           directory: "."
 
-      - name: Connect Custom Domain
+      - name: Connect Multiple Custom Domains
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          DOMAINS: ${{ secrets.CUSTOM_DOMAIN }}
         run: |
           npm install -g wrangler
-          npx wrangler pages domain connect mediafairy-aio ${{ secrets.CUSTOM_DOMAIN }}
+          
+          # Mengubah pemisah koma menjadi baris baru dan melakukan perulangan
+          for domain in $(echo $DOMAINS | tr "," "\n" | tr " " "\n"); do
+            if [ -n "$domain" ]; then
+              echo "Memproses domain: $domain"
+              npx wrangler pages domain connect mediafairy-aio "$domain" || echo "Domain $domain sudah terhubung atau gagal, lanjut..."
+            fi
+          done
