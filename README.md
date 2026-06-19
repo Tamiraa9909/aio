@@ -1,12 +1,12 @@
 <h1 align="center">
-  ⚡ <span style="color:white">MEDIA</span><span style="color:#007BFF">FAIRY</span> AIO Proxy Setup
+  ⚡ <span style="color:white">MEDIA</span><span style="color:#007BFF">FAIRY</span> AIO
 </h1>
 
 Repositori ini memuat skrip proksi *All-in-One* (VMess, VLESS, Trojan, Shadowsocks) yang dirancang untuk di-deploy secara otomatis ke **Cloudflare Pages** menggunakan integrasi GitHub Actions. Skrip ini mendukung penambahan *custom domain* massal secara otomatis.
 
 ---
 
-## 🚀 Panduan Deployment Cepat
+## 🚀 Panduan Deployment
 
 Ikuti 4 langkah utama di bawah ini untuk mengudara dalam hitungan menit.
 
@@ -33,11 +33,9 @@ Anda membutuhkan token agar GitHub bisa berkomunikasi dengan Cloudflare Anda.
 5. Lanjutkan dan klik **Create Token**. Salin token rahasia yang muncul.
 
 ### 3. Setup GitHub Secrets & Custom Domain (Bulk)
-Siapkan repositori Anda untuk melakukan eksekusi otomatis.
 
-1. Buka repositori ini di GitHub Anda (https://github.com/Tamiraa9909/aio/).
-2. Pergi ke tab **Settings** > **Secrets and variables** > **Actions**.
-3. Klik **New repository secret** dan tambahkan 3 kunci berikut secara berurutan:
+1. Pergi ke tab **Settings** > **Secrets and variables** > **Actions**.
+2. Klik **New repository secret** dan tambahkan 3 kunci berikut secara berurutan:
 
 | Nama Secret | Nilai (Value) |
 | :--- | :--- |
@@ -55,7 +53,7 @@ Setelah semua rahasia tersimpan, jalankan sistem automasinya.
 
 ---
 
-## 🛠️ Konfigurasi Klien
+## 🛠️ Konfigurasi Klien 
 Gunakan format *path* berikut pada pengaturan klien VPN Anda (v2rayN, Sing-box, NekoBox, dll) agar dapat terhubung dengan proksi ini:
 
 **Path WebSocket (WS):**
