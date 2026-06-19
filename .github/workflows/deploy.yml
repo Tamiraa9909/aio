@@ -25,18 +25,32 @@ jobs:
           projectName: "mediafairy-aio"
           directory: "."
 
-      - name: Connect Multiple Custom Domains
+      - name: Connect Multiple Custom Domains via API
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           DOMAINS: ${{ secrets.CUSTOM_DOMAIN }}
         run: |
-          npm install -g wrangler
-          
           # Mengubah pemisah koma menjadi baris baru dan melakukan perulangan
           for domain in $(echo $DOMAINS | tr "," "\n" | tr " " "\n"); do
             if [ -n "$domain" ]; then
               echo "Memproses domain: $domain"
-              npx wrangler pages domain connect mediafairy-aio "$domain" || echo "Domain $domain sudah terhubung atau gagal, lanjut..."
+              
+              # Menembak langsung ke Cloudflare REST API
+              RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" -X POST "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/mediafairy-aio/domains" \
+                -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+                -H "Content-Type: application/json" \
+                -d "{\"name\": \"$domain\"}")
+              
+              HTTP_STATUS=$(echo "$RESPONSE" | tr -d '\n' | sed -e 's/.*HTTP_STATUS://')
+              BODY=$(echo "$RESPONSE" | sed -e 's/HTTP_STATUS\:.*//g')
+              
+              if [ "$HTTP_STATUS" -eq 200 ] || [ "$HTTP_STATUS" -eq 201 ]; then
+                echo "✅ Sukses mendaftarkan $domain"
+              else
+                echo "⚠️ Gagal atau sudah terdaftar: $domain (Status: $HTTP_STATUS)"
+                echo "Detail: $BODY"
+              fi
+              echo "----------------------------------------"
             fi
           done
